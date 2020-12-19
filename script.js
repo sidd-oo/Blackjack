@@ -105,20 +105,26 @@ function showScore(activePlayer){
         document.querySelector(activePlayer['scoreSpan']).textContent = activePlayer['score'];
     }
 }
-    
 
-function standBlackjack(){
+//Bot will spread the cards Async-ly
+
+function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve,ms));
+}
+
+async function standBlackjack(){
     blackjackGame['isStand'] = true;
-    let card = randomCard();
-    showCard(DEALER,card);
-    updateScore(card, DEALER);
-    showScore(DEALER);
+    while(blackjackGame['isStand'] === true && DEALER['score'] < 16){
+        let card = randomCard();
+        showCard(DEALER,card);
+        updateScore(card, DEALER);
+        showScore(DEALER);
+        await sleep(1000);
+    }
 
-    if(DEALER['score'] > 15){
         blackjackGame['isTurnOver'] = true;
         let winner = computeWinner();
         displayResult(winner);
-    }
 }
 
 
